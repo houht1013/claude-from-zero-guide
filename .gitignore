@@ -5,3 +5,5 @@ Thumbs.db
 *.key
 .playwright-cli/
 output/
+my-vps.yaml
+xray-server.new.json

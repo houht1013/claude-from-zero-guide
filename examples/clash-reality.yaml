@@ -1,0 +1,49 @@
+mixed-port: 7897
+allow-lan: false
+mode: rule
+log-level: warning
+ipv6: true
+
+proxies:
+  - name: My-VPS
+    type: vless
+    server: 203.0.113.10
+    port: 443
+    uuid: REPLACE_UUID
+    network: tcp
+    flow: xtls-rprx-vision
+    tls: true
+    servername: www.yahoo.com
+    client-fingerprint: chrome
+    reality-opts:
+      public-key: REPLACE_PUBLIC_KEY
+      short-id: "REPLACE_SHORT_ID"
+    udp: true
+    packet-encoding: xudp
+
+proxy-groups:
+  - name: VPS
+    type: select
+    proxies:
+      - My-VPS
+
+dns:
+  enable: true
+  ipv6: true
+  enhanced-mode: fake-ip
+  respect-rules: true
+  proxy-server-nameserver:
+    - https://1.1.1.1/dns-query
+  nameserver:
+    - https://1.1.1.1/dns-query
+
+rules:
+  - IP-CIDR,203.0.113.10/32,DIRECT,no-resolve
+  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+  - IP-CIDR6,::1/128,DIRECT,no-resolve
+  - IP-CIDR6,fc00::/7,DIRECT,no-resolve
+  - IP-CIDR6,fe80::/10,DIRECT,no-resolve
+  - MATCH,VPS

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Windows 与 iPhone 新手图文教程：本地代理、DMIT、搬瓦工、IP 检测、Proton、美区 Apple 账户与 Claude 订阅，附原始资料链接。"><title>从零准备 Claude 使用环境</title><style>*{box-sizing:border-box}html{scroll-padding-top:30px}body{margin:0;background:#f4f2ed;color:#272923;font:17px/1.9 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif}main{max-width:1040px;margin:36px auto;background:#fffdf8;padding:56px 68px;border:1px solid #e5e1d8;border-radius:8px}.meta{font-size:13px;color:#697264;letter-spacing:.06em;border-bottom:1px solid #deded3;padding-bottom:15px;margin-bottom:32px}h1{font-size:38px;line-height:1.35;letter-spacing:-.025em}h2{margin-top:64px;padding-top:24px;border-top:2px solid #2c594d;font-size:26px;line-height:1.5;color:#244c41}h3{font-size:21px;line-height:1.6;margin-top:35px}p,li{overflow-wrap:anywhere}a{color:#245f51;text-decoration-thickness:1px;text-underline-offset:3px}a:hover{color:#a74d2b}a:focus-visible{outline:3px solid #b9653e;outline-offset:3px}blockquote{margin:25px 0;padding:8px 20px;border-left:4px solid #739784;background:#edf2eb;color:#344238}img{display:block;max-width:100%;max-height:820px;height:auto;object-fit:contain;margin:30px auto 12px;border:1px solid #deded5;border-radius:5px}p:has(>em:only-child){font-size:14px;color:#687161;line-height:1.7}.table-scroll{overflow-x:auto;margin:22px 0}table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}th,td{border:1px solid #deded5;padding:11px 14px;text-align:left;vertical-align:top}th{background:#eaf0e7}tr:nth-child(even){background:#f7f8f2}pre{overflow-x:auto;background:#202b28;color:#edf6ed;padding:20px;border-radius:5px;line-height:1.6;font-size:14px}code{font-family:Consolas,monospace}p code,li code,td code{background:#edf0e7;padding:2px 5px;border-radius:3px;font-size:.9em}footer{margin-top:48px;border-top:1px solid #deded3;padding-top:22px;font-size:13px;color:#687161}@media(max-width:680px){body{font-size:16px}main{margin:0;border:0;border-radius:0;padding:28px 20px}h1{font-size:29px}h2{font-size:23px;margin-top:45px}h3{font-size:19px}.meta{font-size:11px}img{margin-top:22px}pre{font-size:12px}}@media print{body,main{background:white}main{max-width:none;border:0;padding:0;margin:0}h2,h3{break-after:avoid}img,tr,pre{break-inside:avoid}a{color:inherit}img{max-height:650px}}</style></head><body><main><div class="meta">CLAUDE 使用环境笔记 · 2026.10.31 · 图文版</div><h1>从零准备 Claude 使用环境</h1>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>从零准备 Claude 使用环境</title><style>*{box-sizing:border-box}html{scroll-padding-top:30px}body{margin:0;background:#f4f2ed;color:#272923;font:17px/1.9 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif}main{max-width:1040px;margin:36px auto;background:#fffdf8;padding:56px 68px;border:1px solid #e5e1d8;border-radius:8px}.meta{font-size:13px;color:#697264;letter-spacing:.06em;border-bottom:1px solid #deded3;padding-bottom:15px;margin-bottom:32px}h1{font-size:38px;line-height:1.35;letter-spacing:-.025em}h2{margin-top:64px;padding-top:24px;border-top:2px solid #2c594d;font-size:26px;line-height:1.5;color:#244c41}h3{font-size:21px;line-height:1.6;margin-top:35px}p,li{overflow-wrap:anywhere}a{color:#245f51;text-decoration-thickness:1px;text-underline-offset:3px}a:hover{color:#a74d2b}a:focus-visible{outline:3px solid #b9653e;outline-offset:3px}blockquote{margin:25px 0;padding:8px 20px;border-left:4px solid #739784;background:#edf2eb;color:#344238}img{display:block;max-width:100%;max-height:820px;height:auto;object-fit:contain;margin:30px auto 12px;border:1px solid #deded5;border-radius:5px}p:has(>em:only-child){font-size:14px;color:#687161;line-height:1.7}.table-scroll{overflow-x:auto;margin:22px 0}table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}th,td{border:1px solid #deded5;padding:11px 14px;text-align:left;vertical-align:top}th{background:#eaf0e7}tr:nth-child(even){background:#f7f8f2}pre{overflow-x:auto;background:#202b28;color:#edf6ed;padding:20px;border-radius:5px;line-height:1.6;font-size:14px}code{font-family:Consolas,monospace}p code,li code,td code{background:#edf0e7;padding:2px 5px;border-radius:3px;font-size:.9em}footer{margin-top:48px;border-top:1px solid #deded3;padding-top:22px;font-size:13px;color:#687161}@media(max-width:680px){body{font-size:16px}main{margin:0;border:0;border-radius:0;padding:28px 20px}h1{font-size:29px}h2{font-size:23px;margin-top:45px}h3{font-size:19px}.meta{font-size:11px}img{margin-top:22px}pre{font-size:12px}}@media print{body,main{background:white}main{max-width:none;border:0;padding:0;margin:0}h2,h3{break-after:avoid}img,tr,pre{break-inside:avoid}a{color:inherit}img{max-height:650px}}</style></head><body><main><div class="meta">CLAUDE 使用环境笔记 · 2026.10.31 · 图文版</div><h1>从零准备 Claude 使用环境</h1>
 
 <p>一份写给小白的图文教程：本地代理与 VPN、DMIT 和搬瓦工选购、IP 检测、Proton 邮箱、美区 Apple 账户，以及 Claude 注册与订阅。</p>
 
@@ -97,9 +97,9 @@
 </tbody>
 </table></div>
 
-<p>本文提供两条能理解、能排错的入门路线：已有节点用 Clash Verge Rev；自购 VPS 先用 SSH 建立只供本机使用的浏览器代理。后者只覆盖明确设置了代理的程序，<strong>不是整机 VPN，也不能直接复制给手机使用</strong>。</p>
+<p>本文提供两条路线：已有节点用 Clash Verge Rev；自购 VPS 按<a href="vps-setup.html">完整搭建教程</a>部署 Xray VLESS REALITY，再接入电脑和手机。第四节还保留 SSH 浏览器代理作为临时检查线路的办法，它不能替代节点部署。</p>
 
-<p>如果你要让电脑软件和手机都接入，先选择支持这些设备的完整节点／VPN 方案；不要把浏览器代理已经成功，当成所有设备都已完成配置。</p>
+<p>需要接管电脑软件和手机时，分别检查客户端接管方式；不要把浏览器能上网当成所有程序都已完成配置。</p>
 
 <p>开始前准备：一台电脑、长期控制的邮箱和手机号、密码管理工具。如果走苹果内购，还要有 iPhone、你自己控制的 Apple 账户，以及该地区接受的付款方式。本文不会要求你购买成品账号。</p>
 
@@ -224,7 +224,13 @@
 
 <p><a id="ssh"></a></p>
 
-<h2>四、买了 VPS，怎样先跑通一条自己的连接</h2>
+<h2>四、买了 VPS，怎样搭建自己的节点</h2>
+
+<p>完整步骤已单独整理为 <strong><a href="vps-setup.html">VPS 购买后的节点搭建教程</a></strong>，另有<a href="vps-setup.html">HTML 阅读版</a>。</p>
+
+<p>按“SSH 登录 VPS → 安装 Xray → 生成 UUID、密钥与 Short ID → 检查目标 → 写入并检查配置 → 放行 TCP 443 → Windows／iPhone 接入 → 出口验收”顺序操作。教程附有<a href="examples/xray-reality-server.json">服务端 JSON 模板</a>和<a href="examples/clash-reality.yaml">Clash 客户端模板</a>，全部使用占位值，不含公共账号。</p>
+
+<h3>可选：先用 SSH 快速检查线路</h3>
 
 <p><strong>本节是一条电脑浏览器的最小入门路线：Windows OpenSSH → VPS → Firefox。</strong> 它复用服务器已有的 SSH，不需要先安装面板、开放一堆新端口或运行不明一键脚本。适合先确认服务器和线路是否可用；游戏、整机流量、手机和需要 UDP 的音视频，不在这条路线的覆盖范围里。</p>
 
@@ -729,11 +735,17 @@
 <li><a href="https://claude.com/pricing">Claude 当前定价</a>、<a href="https://support.claude.com/en/articles/8325609-how-do-i-sign-up-for-the-pro-plan">网页 Pro 订阅</a>、<a href="https://support.claude.com/en/articles/9266495-how-do-i-sign-up-for-claude-pro-on-the-claude-app-for-ios">iOS Pro 订阅</a>、<a href="https://support.claude.com/en/articles/9402418-why-was-my-card-declined">银行卡被拒</a>、<a href="https://support.claude.com/en/articles/8325617-cancel-your-pro-max-or-ultra-subscription">取消会员</a>。</li>
 </ol>
 
+<h3>VPS 节点搭建的新增资料</h3>
+
+<ol start="19">
+<li><a href="https://github.com/XTLS/Xray-install/blob/main/README_zh-Hans.md">XTLS 官方安装器</a>、<a href="https://github.com/XTLS/Xray-core/releases/tag/v26.10.29">Xray 26.10.29</a>、<a href="https://xtls.github.io/config/transports/reality.html">REALITY 参数</a>、<a href="https://github.com/XTLS/Xray-examples/tree/main/VLESS-TCP-XTLS-Vision-REALITY">官方服务端示例</a>、<a href="https://wiki.metacubex.one/config/proxies/vless/">Mihomo VLESS 参数</a>。完整说明及验证范围见 <a href="vps-setup.html">VPS-SETUP.md</a>。</li>
+</ol>
+
 <p>资料日期说明：近期社区经历优先选近三个月；SSH、浏览器、DNS 等基础说明优先引用仍在维护的原始文档，不为了“新”而引用转载文章。旧版套餐对比资料与当前官网冲突时，价格和套餐以当前官网及实际结账页为准。检索中出现一份标注 2026-11-12 生效的地区政策，晚于本稿日期，未将它当作当日已生效规则使用。</p>
 
 <h2>图片来源与验证范围</h2>
 
 <p>全部配图均为真实网页截图或官方公开帮助配图，没有生成仿真的付款成功图。图 1、2、6、10 为 2026-10-31 公开页面截图；图 3—5 来自 Clash Verge Rev 官方图解；图 7—8 来自 Proton 官方图解；图 9、11 来自 Apple 官方帮助。逐图来源及图片文件链接见 <a href="assets/README.md">assets/README.md</a>。</p>
 
-<p>本文未执行账号登录、注册提交、购买或订阅，也未实际购买 VPS 或完成手机端操作；SSH 方案依据原始手册编写，未在新购远端实例上做端到端测试。页面入口和金额随版本、地区、账户状态变化，需在自己的界面确认。公开仓库不包含私人 IP、真实节点、密钥、验证码或付款资料。</p>
-<footer>图片已内嵌，保存本 HTML 即可离线阅读正文和截图。外部参考链接仍需联网。<br>正文来源：同仓库 README.md；图片权利与出处见 assets/README.md。</footer></main></body></html>
+<p>本文未执行账号登录、注册提交、购买或订阅，也未实际购买 VPS 或完成手机端操作。SSH 与新增 Xray 方案均未在新购远端实例上做端到端测试；新增模板的本地配置检查范围见搭建教程。页面入口和金额随版本、地区、账户状态变化，需在自己的界面确认。公开仓库不包含私人 IP、真实节点、密钥、验证码或付款资料。</p>
+<footer>图片已内嵌，可离线阅读。外部参考资料仍需联网；下载模板也可在仓库 examples 目录获取。<br>正文来源：README.md；图片出处见 assets/README.md。</footer></main></body></html>

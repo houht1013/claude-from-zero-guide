@@ -37,9 +37,9 @@
 | TUN／VPN | 通过虚拟网卡和路由接管网络 | 仍需检查 DNS、IPv6 和例外规则 |
 | 住宅 IP／机房 IP | 出口地址的网络类型 | 类型和检测分数都不保证账号结果 |
 
-本文提供两条能理解、能排错的入门路线：已有节点用 Clash Verge Rev；自购 VPS 先用 SSH 建立只供本机使用的浏览器代理。后者只覆盖明确设置了代理的程序，**不是整机 VPN，也不能直接复制给手机使用**。
+本文提供两条路线：已有节点用 Clash Verge Rev；自购 VPS 按[完整搭建教程](VPS-SETUP.md)部署 Xray VLESS REALITY，再接入电脑和手机。第四节还保留 SSH 浏览器代理作为临时检查线路的办法，它不能替代节点部署。
 
-如果你要让电脑软件和手机都接入，先选择支持这些设备的完整节点／VPN 方案；不要把浏览器代理已经成功，当成所有设备都已完成配置。
+需要接管电脑软件和手机时，分别检查客户端接管方式；不要把浏览器能上网当成所有程序都已完成配置。
 
 开始前准备：一台电脑、长期控制的邮箱和手机号、密码管理工具。如果走苹果内购，还要有 iPhone、你自己控制的 Apple 账户，以及该地区接受的付款方式。本文不会要求你购买成品账号。
 
@@ -129,7 +129,13 @@
 
 <a id="ssh"></a>
 
-## 四、买了 VPS，怎样先跑通一条自己的连接
+## 四、买了 VPS，怎样搭建自己的节点
+
+完整步骤已单独整理为 **[VPS 购买后的节点搭建教程](VPS-SETUP.md)**，另有[HTML 阅读版](vps-setup.html)。
+
+按“SSH 登录 VPS → 安装 Xray → 生成 UUID、密钥与 Short ID → 检查目标 → 写入并检查配置 → 放行 TCP 443 → Windows／iPhone 接入 → 出口验收”顺序操作。教程附有[服务端 JSON 模板](examples/xray-reality-server.json)和[Clash 客户端模板](examples/clash-reality.yaml)，全部使用占位值，不含公共账号。
+
+### 可选：先用 SSH 快速检查线路
 
 **本节是一条电脑浏览器的最小入门路线：Windows OpenSSH → VPS → Firefox。** 它复用服务器已有的 SSH，不需要先安装面板、开放一堆新端口或运行不明一键脚本。适合先确认服务器和线路是否可用；游戏、整机流量、手机和需要 UDP 的音视频，不在这条路线的覆盖范围里。
 
@@ -462,10 +468,14 @@ Claude 官方说明取消后通常仍可使用至本账期结束，并要求至�
 17. [Claude 支持地区](https://support.claude.com/en/articles/8461763-where-can-i-access-claude)、[手机号验证](https://support.claude.com/en/articles/8287232-verify-your-phone-number)。手机号文章为 2026 年 8 月更新。
 18. [Claude 当前定价](https://claude.com/pricing)、[网页 Pro 订阅](https://support.claude.com/en/articles/8325609-how-do-i-sign-up-for-the-pro-plan)、[iOS Pro 订阅](https://support.claude.com/en/articles/9266495-how-do-i-sign-up-for-claude-pro-on-the-claude-app-for-ios)、[银行卡被拒](https://support.claude.com/en/articles/9402418-why-was-my-card-declined)、[取消会员](https://support.claude.com/en/articles/8325617-cancel-your-pro-max-or-ultra-subscription)。
 
+### VPS 节点搭建的新增资料
+
+19. [XTLS 官方安装器](https://github.com/XTLS/Xray-install/blob/main/README_zh-Hans.md)、[Xray 26.10.29](https://github.com/XTLS/Xray-core/releases/tag/v26.10.29)、[REALITY 参数](https://xtls.github.io/config/transports/reality.html)、[官方服务端示例](https://github.com/XTLS/Xray-examples/tree/main/VLESS-TCP-XTLS-Vision-REALITY)、[Mihomo VLESS 参数](https://wiki.metacubex.one/config/proxies/vless/)。完整说明及验证范围见 [VPS-SETUP.md](VPS-SETUP.md)。
+
 资料日期说明：近期社区经历优先选近三个月；SSH、浏览器、DNS 等基础说明优先引用仍在维护的原始文档，不为了“新”而引用转载文章。旧版套餐对比资料与当前官网冲突时，价格和套餐以当前官网及实际结账页为准。检索中出现一份标注 2026-11-12 生效的地区政策，晚于本稿日期，未将它当作当日已生效规则使用。
 
 ## 图片来源与验证范围
 
 全部配图均为真实网页截图或官方公开帮助配图，没有生成仿真的付款成功图。图 1、2、6、10 为 2026-10-31 公开页面截图；图 3—5 来自 Clash Verge Rev 官方图解；图 7—8 来自 Proton 官方图解；图 9、11 来自 Apple 官方帮助。逐图来源及图片文件链接见 [assets/README.md](assets/README.md)。
 
-本文未执行账号登录、注册提交、购买或订阅，也未实际购买 VPS 或完成手机端操作；SSH 方案依据原始手册编写，未在新购远端实例上做端到端测试。页面入口和金额随版本、地区、账户状态变化，需在自己的界面确认。公开仓库不包含私人 IP、真实节点、密钥、验证码或付款资料。
+本文未执行账号登录、注册提交、购买或订阅，也未实际购买 VPS 或完成手机端操作。SSH 与新增 Xray 方案均未在新购远端实例上做端到端测试；新增模板的本地配置检查范围见搭建教程。页面入口和金额随版本、地区、账户状态变化，需在自己的界面确认。公开仓库不包含私人 IP、真实节点、密钥、验证码或付款资料。

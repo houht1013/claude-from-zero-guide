@@ -1,25 +1,30 @@
-# 从零准备 Claude 使用环境
+# 从买 VPS 到订阅 Claude 的完整小白教程
 
-一份写给小白的图文教程：本地代理与 VPN、DMIT 和搬瓦工选购、IP 检测、Proton 邮箱、美区 Apple 账户，以及 Claude 注册与订阅。
+从购买 DMIT／搬瓦工，到搭建自己的代理节点、配置电脑和手机、检查 IP 与 DNS，再到注册 Proton、美区 Apple 账户和 Claude，最后通过 App Store 礼品卡完成 Claude 内购与续费管理，按顺序做完这一份即可。
 
-文件：[HTML 阅读版](index.html)（下载后用浏览器打开，截图已内嵌）。
+文件：[HTML 阅读版](index.html)（截图和流程图已内嵌，下载单个文件即可离线阅读）。
 
-资料核对日期：**2026 年 10 月 31 日**。电脑以 Windows 为主，手机以 iPhone 为主。社区经验优先参考近三个月的原帖，操作入口和付款条件再与官方资料核对。
+资料核对日期：**2026 年 10 月 31 日**。电脑以 Windows 为主，手机以 iPhone 为主；服务端步骤以全新 Ubuntu 24.04 LTS 或 Debian 12、systemd、公网 IPv4 为前提。社区经验优先参考近三个月的原帖，关键配置和付款条件再与官方资料核对。
 
-**先准备网络和免费账号，确认能正常使用，最后再付会员费。** 已经有可用节点的人，不必为了跟教程再买 VPS；DMIT 和搬瓦工二选一即可。
+**先让网络和免费账号正常工作，最后再付 Claude 会员费。** 已有可用节点不必重复买 VPS；DMIT 和搬瓦工二选一即可。
 
-> 适用前提：Claude 官方要求实际位于支持地区，并对新账号要求支持地区的手机号。海外出口和美区 Apple 账户不能替代这两个条件。中国大陆未列入本文核对的支持名单。请先查看[支持地区](https://support.claude.com/en/articles/8461763-where-can-i-access-claude)和[手机号要求](https://support.claude.com/en/articles/8287232-verify-your-phone-number)，再决定是否投入费用。
+> 适用前提：Claude 官方要求实际位于支持地区，并对新账号要求支持地区的手机号。海外出口和美区 Apple 账户不能替代这两个条件。中国大陆未列入本文核对的支持名单。先查看[支持地区](https://support.claude.com/en/articles/8461763-where-can-i-access-claude)和[手机号要求](https://support.claude.com/en/articles/8287232-verify-your-phone-number)，再决定是否投入费用。
 
-## 阅读路线
+## 先看完整流程
 
-| 你的情况 | 按这个顺序阅读 |
+![从买服务器、部署节点到注册和订阅 Claude 的完整流程](assets/00-setup-flow.svg)
+
+*流程示意：先接好网络，再准备账号，最后通过美区礼品卡兑换余额并在 Claude App 内订阅。[打开大图](assets/00-setup-flow.svg)。*
+
+| 你的起点 | 按这个顺序做 |
 | --- | --- |
-| 已有节点或订阅链接 | 第一节 → 第三节 → 第五至第九节 |
-| 想买自己的服务器 | 第一至第二节 → 第四节 → 第五至第九节 |
-| 网络已经正常，只想订阅 | 第六至第九节 |
-| 已经报错或扣款失败 | 第十节，再回看对应步骤 |
+| 从零自建 | 第一节准备 → 第二节买 VPS → 第三节搭节点 → 第四节连接设备 → 第五节验收 → 第六至九节注册和订阅 |
+| 已有节点／订阅 | 第一节了解概念 → 第四节接入客户端 → 第五节验收 → 第六至九节 |
+| 网络和账号已可用 | 直接看第九节；付费前核对套餐、账号和渠道 |
+| 当前已经报错 | 看第十节定位问题；停用和回退看第十一节 |
 
-目录：[准备清单](#prepare) · [买 VPS](#vps) · [客户端](#client) · [自己的 VPS 如何接入](#ssh) · [IP 检测和分流](#check) · [Proton](#mail) · [Apple 账户](#apple) · [Claude 注册](#claude) · [购买会员](#subscribe) · [故障排查](#trouble) · [参考链接](#references)
+目录：[准备清单](#prepare) · [买 VPS](#vps) · [搭建节点](#deploy) · [电脑和手机接入](#client) · [网络验收和分流](#check) · [Proton 邮箱](#mail) · [Apple 账户](#apple) · [Claude 注册](#claude) · [购买会员](#subscribe) · [故障排查](#trouble) · [回退与维护](#maintenance) · [参考链接](#references)
+
 
 <a id="prepare"></a>
 
@@ -37,11 +42,11 @@
 | TUN／VPN | 通过虚拟网卡和路由接管网络 | 仍需检查 DNS、IPv6 和例外规则 |
 | 住宅 IP／机房 IP | 出口地址的网络类型 | 类型和检测分数都不保证账号结果 |
 
-本文提供两条路线：已有节点用 Clash Verge Rev；自购 VPS 按[完整搭建教程](VPS-SETUP.md)部署 Xray VLESS REALITY，再接入电脑和手机。第四节还保留 SSH 浏览器代理作为临时检查线路的办法，它不能替代节点部署。
+本文以“自购 VPS → 部署 Xray VLESS REALITY → 电脑和手机接入”为主线，后续接上账号注册与订阅。已有可用节点的读者，可以跳过买服务器和服务端部署，直接进入第四节。
 
 需要接管电脑软件和手机时，分别检查客户端接管方式；不要把浏览器能上网当成所有程序都已完成配置。
 
-开始前准备：一台电脑、长期控制的邮箱和手机号、密码管理工具。如果走苹果内购，还要有 iPhone、你自己控制的 Apple 账户，以及该地区接受的付款方式。本文不会要求你购买成品账号。
+开始前准备：一台电脑、长期控制的邮箱和手机号、密码管理工具。苹果内购还需要 iPhone、你自己控制的美区 Apple 账户和可在该账户兑换的美国礼品卡。本文不会要求你购买成品账号。
 
 预算分开记：**线路或 VPS 费用 + Claude 会员费 + 税费／支付渠道费用**。用现有网络时，VPS 这项可以为零。
 
@@ -93,114 +98,394 @@
 
 本文不承诺无条件退款或免费换 IP。付款前阅读 [DMIT 退款说明](https://docs.dmit.io/guide/getting-started)中的 Refund 入口，以及 [BWG 服务条款](https://bandwagonhost.com/terms-of-service.php)。支付平台保存的自动扣款授权，也要单独检查。
 
-<a id="client"></a>
-
-## 三、已有节点，先把本地客户端用明白
-
-### Windows 使用 Clash Verge Rev
-
-1. 从项目的[官方发布页](https://github.com/clash-verge-rev/clash-verge-rev/releases)下载匹配系统架构的安装包。大多数普通 Windows 电脑使用 x64；ARM 设备要选相应版本。
-2. 安装并打开，进入“订阅／Profiles”。把服务方提供的兼容订阅链接粘贴进去，点“导入”。**订阅链接通常含访问凭据，别放进公开 GitHub 仓库。**
-3. 导入后选择该配置，进入“代理／Proxies”，手动选一个可用节点。先完成一次可重复的连接，不要注册过程中一直自动切换出口。
-4. 选择“规则模式”。它与“系统代理”开关是两回事：前者决定如何分流，后者决定哪些程序将流量交给客户端。
-5. 先开启“系统代理”，用浏览器访问一个普通 HTTPS 网站，再按第五节查出口。
-6. 如果需要接管不遵守系统代理的程序，按客户端提示安装服务模式，再开启 TUN。TUN 的 DNS、IPv6、路由和排除项也要一起验证。
-7. 关闭连接时，先在客户端关掉自己开启的系统代理／TUN，再退出程序。如果客户端已异常退出，在 Windows“设置 → 网络和 Internet → 代理”检查是否残留本地代理地址。
-
-![Clash Verge Rev 的订阅导入界面](assets/03-verge-import.png)
-
-*图 3：项目官方文档配图，指向“粘贴订阅链接 → 导入”。这是文档中的示例界面，不含本文作者的真实订阅。*
-
-![Clash Verge Rev 的节点和模式选择界面](assets/04-verge-proxy.png)
-
-*图 4：先选配置中的代理组及节点，再确认规则模式。图里的节点仅作界面说明。*
-
-![Clash Verge Rev 系统代理与 TUN 开关](assets/05-verge-enable.png)
-
-*图 5：系统代理和 TUN 是不同接管方式。名称、开关位置随版本变化，以[官方快速入门](https://www.clashverge.dev/guide/quickstart.html)为准。*
-
-### iPhone 如何接入
-
-先使用服务方明确支持的 iOS 客户端，从 App Store 下载并核对开发者。Shadowrocket 是社区常用选项之一，它是否在你的商店地区可售、当日价格和协议支持，要看实际商店页面；不是使用 Claude 的指定必买软件。
-
-获得客户端后，导入服务方给的订阅／配置，选中节点，开启连接，并自行允许 iOS 添加 VPN 配置。在 Safari 内按第五节检查出口。电脑与手机需要分别验收，不能因为电脑通过就跳过手机。
-
-如果使用 Shadowrocket，先理解当前配置的规则与全局路由；不要把 Mihomo 的 YAML 文件直接当作它的配置导入。AgentRoute 作者也明确标注其 Shadowrocket 模板尚未在实体 iPhone 上验证。
-
 <a id="ssh"></a>
+<a id="deploy"></a>
 
-## 四、买了 VPS，怎样搭建自己的节点
+## 三、在 VPS 上搭建自己的代理节点
 
-完整步骤已单独整理为 **[VPS 购买后的节点搭建教程](VPS-SETUP.md)**，另有[HTML 阅读版](vps-setup.html)。
+本节采用 **Xray + VLESS REALITY + XTLS Vision**，核心版本固定为 [Xray 26.10.29](https://github.com/XTLS/Xray-core/releases/tag/v26.10.29)。不需要先购买域名、签发自己的 TLS 证书或安装网页管理面板。已有网站、面板或代理的服务器，不要直接套用全新安装步骤。
 
-按“SSH 登录 VPS → 安装 Xray → 生成 UUID、密钥与 Short ID → 检查目标 → 写入并检查配置 → 放行 TCP 443 → Windows／iPhone 接入 → 出口验收”顺序操作。教程附有[服务端 JSON 模板](examples/xray-reality-server.json)和[Clash 客户端模板](examples/clash-reality.yaml)，全部使用占位值，不含公共账号。
+| 位置 | 作用 |
+| --- | --- |
+| VPS 上的 Xray | 监听 TCP 443，接收经过认证的客户端连接 |
+| 电脑／手机客户端 | 保存节点参数，将需要代理的流量交给 VPS |
+| 目标网站 | 接收从 VPS 出站的请求，仍按自身规则提供服务 |
 
-### 可选：先用 SSH 快速检查线路
+本节先完成服务端，第四节再接入客户端。不要把 SSH 能登录、服务显示运行或延迟有数字，直接当成整套网络已经成功。
 
-**本节是一条电脑浏览器的最小入门路线：Windows OpenSSH → VPS → Firefox。** 它复用服务器已有的 SSH，不需要先安装面板、开放一堆新端口或运行不明一键脚本。适合先确认服务器和线路是否可用；游戏、整机流量、手机和需要 UDP 的音视频，不在这条路线的覆盖范围里。
 
-如果你的网络无法连接该 VPS 的 SSH，后面的隧道同样无法建立。不要把连接失败直接判断为“账号问题”。
+### 3.1 登录服务器并确认系统
 
-### 1. 找齐四项资料
+从服务商控制台找齐：公网 IP、SSH 端口、登录用户、密钥或密码。DMIT 的密钥获取方式见[官方说明](https://docs.dmit.io/guide/instance/get-ssh-keys)。
 
-从服务详情确认：公网 IPv4、SSH 端口、登录用户名、认证方式。DMIT 可能需要下载或导入密钥，参见[官方 SSH 密钥说明](https://docs.dmit.io/guide/instance/get-ssh-keys)和[连接说明](https://docs.dmit.io/guide/instance/connect)。私钥不是公钥，不要传给别人。
-
-### 2. 在 Windows 检查 SSH 客户端
-
-打开 PowerShell，运行：
+打开 PowerShell，检查：
 
 ```powershell
 ssh -V
 ```
 
-能看到版本号即可。若提示找不到命令，从 Windows“可选功能”安装 **OpenSSH 客户端**，或由管理员按[微软说明](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse)处理。本机只需要客户端，不必为这件事安装 OpenSSH 服务器。
-
-### 3. 建立仅监听本机的 SOCKS 隧道
-
-下面全部是占位示例。`203.0.113.10` 是文档示例地址，不能实际连接；端口 22、用户 root 和私钥路径都要换成你的实例信息。
-
-密钥登录示例：
+下面的 `203.0.113.10` 是无法实际使用的文档示例地址。将 IP、端口、用户名和密钥路径全部换成自己的：
 
 ```powershell
-ssh -N -D 127.0.0.1:1080 -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -p 22 -i "C:\YOUR_PRIVATE_FOLDER\vps-key" root@203.0.113.10
+ssh -p 22 -i "C:\YOUR_PRIVATE_FOLDER\vps-key" root@203.0.113.10
 ```
 
-如果服务商给的是密码登录，移除 `-i` 和后面的私钥路径，按终端提示输入密码。终端输入密码时不显示字符是正常现象；不要把密码拼进命令行。
+使用密码认证时，去掉 `-i` 与私钥路径，按提示输入密码。第一次连接要从服务商可信控制台核对主机指纹，再接受；不要跳过指纹检查。
 
-第一次连接时，将 SSH 主机指纹与服务商控制台或其可信控制台中取得的指纹核对，再接受。遇到“主机指纹已改变”，先查是不是重装过服务器或 IP 被重新分配，不要直接删除警告。
+登录后，下面的命令都在 **VPS 的 Linux 终端**执行，不是在本机 PowerShell 执行。需要 root 权限；若登录用户不是 root，先运行：
 
-认证成功后，窗口可能停在那里没有新输出，这正是 `-N` 的正常行为。**保持这个窗口打开**；`-D 127.0.0.1:1080` 会创建只供本机使用的 SOCKS 入口。参数含义见 [OpenSSH 手册](https://man.openbsd.org/ssh.1)。
+```bash
+sudo -i
+```
 
-### 4. 让 Firefox 明确使用它
+先做三项只读检查：
 
-打开 [Firefox 官方下载页](https://www.firefox.com/)，安装后进入“设置”，搜索“代理／proxy”。不同版本入口可能在“网络设置”或“隐私与安全 → 高级设置”中，打开连接设置，填写：
+```bash
+cat /etc/os-release
+timedatectl status
+ss -lntp
+```
 
-| 字段 | 填写内容 |
+确认系统符合前提，时间同步正常，TCP 443 没被其他程序占用。443 已有 Nginx、网站或其他代理时，先处理端口规划，不要直接杀掉现有进程。
+
+### 3.2 安装 Xray 核心
+
+先安装下载、解压和编辑配置所需工具：
+
+```bash
+apt update
+apt install -y curl unzip ca-certificates openssl nano
+```
+
+从 **XTLS 官方仓库**下载安装器文件，先保存，再执行：
+
+```bash
+curl -fL --output /root/xray-install.sh https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh
+```
+
+下载有错误就停在这里，不要继续。可以先用 `less /root/xray-install.sh` 查看内容，按 `q` 退出，再安装本文核对的核心版本：
+
+```bash
+bash /root/xray-install.sh install --version 26.10.29
+/usr/local/bin/xray version
+```
+
+安装器负责创建服务用户、安装核心与 systemd 服务。它不会替你完成下一节的节点认证参数。固定版本是为了让教程可复现，不代表永久停留在这个版本；以后升级先看官方发布说明并备份。
+
+截至本文日期，官方安装器使用专用 `xray` 用户，配置文件要求 `root:xray`、权限 `0640`。不要照抄旧教程改成 `nobody`、把服务改成 root 运行，或为了排错执行 `chmod 777`。依据：[Xray-install 当前说明](https://github.com/XTLS/Xray-install/blob/main/README_zh-Hans.md)。
+
+### 3.3 生成 UUID、密钥和 Short ID
+
+依次运行：
+
+```bash
+/usr/local/bin/xray uuid
+/usr/local/bin/xray x25519
+openssl rand -hex 8
+```
+
+把结果保存在自己的密码管理器，不要贴到公开 Issue。你会用到以下几项：
+
+| 生成结果 | 服务端用在哪里 | 客户端用在哪里 |
+| --- | --- | --- |
+| UUID | `clients[].id` | UUID／用户 ID |
+| PrivateKey | `privateKey` | **不填，私钥只留在服务端** |
+| Password (PublicKey) | 不填 | REALITY Public Key／公钥 |
+| `openssl rand -hex 8` 的 16 位十六进制字符串 | `shortIds` | Short ID |
+
+26.10.29 的 X25519 输出将公钥标为 `Password (PublicKey)`。有的旧教程只写 `PublicKey`；不要误用 `PrivateKey` 或 `Hash32`。字段依据见[官方生成器源码](https://github.com/XTLS/Xray-core/blob/v26.10.29/main/commands/all/curve25519.go)。
+
+UUID 和 Short ID 需要服务端、客户端一致。电脑和手机同时使用并不要求公开一个订阅地址；你可以在自己的设备上分别填这些参数。
+
+### 3.4 检查 REALITY 目标站点
+
+本节模板以 `www.yahoo.com` 为示例。先从 **VPS 上**运行：
+
+```bash
+/usr/local/bin/xray tls ping www.yahoo.com
+curl -I --http2 https://www.yahoo.com
+```
+
+查看 TLS 检查是否成功，以及 curl 的响应首行是否为 `HTTP/2`（状态码不必是 200）。`--http2` 的含义见 [curl 官方手册](https://curl.se/docs/manpage.html#--http2)。目标应支持 TLS 1.3 和 H2，并能从你的 VPS 正常完成握手；不能把本机浏览器能打开当作服务器上也可用。该域名只是配置示例，不承诺在每个机房都适合长期使用。
+
+当前核心对部分旧教程常用的 Apple／Microsoft 目标会发出风险警告，不能把“配置检查成功”当作这些警告可以忽略，参见[版本内的校验逻辑](https://github.com/XTLS/Xray-core/blob/v26.10.29/infra/conf/transport_security.go)。
+
+如果握手超时或能力不符合要求，先按[官方 REALITY 说明](https://xtls.github.io/config/transports/reality.html)选择合适目标。目标域名、证书可接受的 SNI 和实际网络路径需要匹配，不要拿任意网站名称随便替换。
+
+确定更换目标后，要同时改服务端的 `target`、`serverNames` 和客户端的 SNI／`servername`。**客户端的服务器地址仍然是你自己的 VPS IP。**
+
+REALITY 未通过认证的连接会回落到配置的目标，相关流量可能计入 VPS 用量。目标选择不当可能被扫描者利用转发能力；避免盲目复制免费 CDN 目标，并开启服务商用量提醒。这里保留最小配置，不把“有加密”当作“不会产生额外流量”。
+
+### 3.5 填写服务端配置并启用
+
+配置模板：[examples/xray-reality-server.json](examples/xray-reality-server.json)。它包含占位值，**未替换不能直接启动**。
+
+下面是模板全文，阅读时先认清要替换的三处认证参数：
+
+```json
+{
+  "log": {
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "tag": "reality-in",
+      "listen": "0.0.0.0",
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "REPLACE_UUID",
+            "flow": "xtls-rprx-vision"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "raw",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "target": "www.yahoo.com:443",
+          "serverNames": ["www.yahoo.com"],
+          "privateKey": "REPLACE_PRIVATE_KEY",
+          "shortIds": ["REPLACE_SHORT_ID"]
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {"protocol": "freedom", "tag": "direct"},
+    {"protocol": "blackhole", "tag": "block"}
+  ],
+  "routing": {
+    "rules": [
+      {"type": "field", "ip": ["geoip:private"], "outboundTag": "block"}
+    ]
+  }
+}
+```
+
+先备份安装器生成的配置：
+
+```bash
+install -d -m 700 /root/xray-backups
+cp -a /usr/local/etc/xray/config.json "/root/xray-backups/config-$(date +%Y%m%d-%H%M%S).json"
+```
+
+下载模板到暂存文件，不直接覆盖运行配置：
+
+```bash
+curl -fL --output /root/xray-server.new.json https://raw.githubusercontent.com/houht1013/claude-from-zero-guide/main/examples/xray-reality-server.json
+chmod 600 /root/xray-server.new.json
+nano /root/xray-server.new.json
+```
+
+如果第 3.4 步的测试未通过，先停下处理目标选择，不要直接使用模板域名。
+
+在 nano 中，用前面生成的值替换 `REPLACE_UUID`、`REPLACE_PRIVATE_KEY`、`REPLACE_SHORT_ID`；按第 3.4 步检查目标域名。按 `Ctrl+O`、回车保存，`Ctrl+X` 退出。保留 JSON 的引号、逗号和方括号。
+
+模板只监听公网 IPv4 的 TCP 443。出站默认走服务器网络，并阻止节点用户通过代理访问 `geoip:private` 所指的私网地址；该规则依赖官方安装器安装的 GeoIP 数据。
+
+运行核心的配置检查：
+
+```bash
+/usr/local/bin/xray run -test -config /root/xray-server.new.json
+```
+
+**必须看到检查成功且命令退出码为 0**，才继续下面的步骤。配置检查不会证明你的目标站点、线路或客户端已连通。
+
+用官方要求的权限安装配置，再启用服务：
+
+```bash
+install -o root -g xray -m 640 /root/xray-server.new.json /usr/local/etc/xray/config.json
+systemctl enable xray
+systemctl restart xray
+systemctl status xray --no-pager
+```
+
+看到 `active (running)` 说明进程已运行；仍需下一步放行端口及客户端测试。
+
+### 3.6 核对防火墙和 TCP 443
+
+需要检查两个位置：服务商提供的安全组／云防火墙，以及 VPS 内已有的防火墙。
+
+| 用途 | 需要放行 |
 | --- | --- |
-| 方式 | 手动代理配置 |
-| SOCKS 主机 | `127.0.0.1` |
-| 端口 | `1080` |
-| SOCKS 版本 | SOCKS v5 |
-| 使用 SOCKS v5 时代理 DNS／Proxy DNS when using SOCKS v5 | 勾选 |
-| HTTP／HTTPS 代理栏 | 此路线留空，不要把 SOCKS 端口误填为 HTTP 代理 |
+| 管理 VPS | 你实际使用的 SSH TCP 端口，来源尽量限制为可信管理网络 |
+| 此节点 | 入站 TCP 443 |
 
-参见 [Mozilla 连接设置](https://support.mozilla.org/en-US/kb/connection-settings-firefox)。如果浏览器另设了独立 DoH，先确认它与远端 DNS 的预期路径一致，并用第五节检测；勾选一个选项不能代替实际验收。
+这份 REALITY 配置的公网传输走 TCP。模板中的 UDP 请求由 XUDP 封装，不需要因此额外开放公网 UDP 443。
 
-现在在**这个 Firefox**里访问 IP 检测页，公网出口应与 VPS 出口对应。其他浏览器、桌面 App 和命令行不会因此自动使用它。
+在 Ubuntu 上，如果已经使用 UFW，先查看：
 
-另开一个 PowerShell，可用下面的显式代理请求做交叉检查：
-
-```powershell
-curl.exe --max-time 15 --proxy socks5h://127.0.0.1:1080 https://api.ipify.org
+```bash
+ufw status verbose
 ```
 
-`socks5h` 表示这个请求将目标域名交给代理端解析。若浏览器与此命令结果不同，先检查浏览器配置和所用检测目标；不要急着重买服务器。
+**仅在它已经处于 active 时**，按原有策略添加：
 
-### 5. 停用与恢复
+```bash
+ufw allow 443/tcp
+```
 
-在 Firefox 将代理方式改回原来的设置，再到 SSH 窗口按 `Ctrl+C` 结束隧道。此方法不更改服务器防火墙、DNS 或系统路由，也不让本机 1080 端口向局域网开放。
+不要在 SSH 会话中照抄 `ufw reset`、`ufw disable` 或未保留 SSH 规则就执行 `ufw enable`。如果没有 UFW、使用 nftables／其他管理工具，就按现有工具处理，不叠加另一套防火墙。
 
-SSH 的动态代理不承载 UDP，也不自动约束 WebRTC。它的作用范围到这里为止。如果你需要长期整机 VPN，可继续参考 [WireGuard 官方安装说明](https://www.wireguard.com/install/)和 [Ubuntu 默认网关配置](https://ubuntu.com/server/docs/wireguard-vpn-defaultgw/)建立专门方案；不要在同一台电脑同时叠开多个 TUN／VPN 来碰运气。
+回到 Windows，检查 TCP 是否可达，把示例 IP 换成自己的：
+
+```powershell
+Test-NetConnection -ComputerName 203.0.113.10 -Port 443
+```
+
+`TcpTestSucceeded: True` 只证明 TCP 能连上，不证明 REALITY 参数正确。
+
+<a id="client"></a>
+
+## 四、让电脑和手机接入同一个节点
+
+还没有客户端时，Windows 从 [Clash Verge Rev 官方发布页](https://github.com/clash-verge-rev/clash-verge-rev/releases)下载匹配系统架构的安装包。普通电脑通常是 x64，ARM 设备选择对应版本。
+
+### 4.1 Windows 导入自建节点
+
+打开本仓库的[客户端模板](examples/clash-reality.yaml)，下载保存为本地文件，例如 `my-vps.yaml`，用文本编辑器修改：
+
+| 模板字段 | 填什么 |
+| --- | --- |
+| `server: 203.0.113.10` | 你的 VPS 公网 IPv4 |
+| `IP-CIDR,203.0.113.10/32,...` | 同一个 VPS IPv4，保留 `/32` |
+| `uuid` | 第 3.3 步生成的 UUID |
+| `public-key` | 第 3.3 步 `Password (PublicKey)` 的值 |
+| `short-id` | 第 3.3 步生成的 Short ID，保留引号 |
+| `servername` | 第 3.4 步确认的目标 SNI，与服务端一致 |
+
+客户端模板全文如下，改好后保存为本地 YAML 文件：
+
+```yaml
+mixed-port: 7897
+allow-lan: false
+mode: rule
+log-level: warning
+ipv6: true
+
+proxies:
+  - name: My-VPS
+    type: vless
+    server: 203.0.113.10
+    port: 443
+    uuid: REPLACE_UUID
+    network: tcp
+    flow: xtls-rprx-vision
+    tls: true
+    servername: www.yahoo.com
+    client-fingerprint: chrome
+    reality-opts:
+      public-key: REPLACE_PUBLIC_KEY
+      short-id: "REPLACE_SHORT_ID"
+    udp: true
+    packet-encoding: xudp
+
+proxy-groups:
+  - name: VPS
+    type: select
+    proxies:
+      - My-VPS
+
+dns:
+  enable: true
+  ipv6: true
+  enhanced-mode: fake-ip
+  respect-rules: true
+  proxy-server-nameserver:
+    - https://1.1.1.1/dns-query
+  nameserver:
+    - https://1.1.1.1/dns-query
+
+rules:
+  - IP-CIDR,203.0.113.10/32,DIRECT,no-resolve
+  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+  - IP-CIDR6,::1/128,DIRECT,no-resolve
+  - IP-CIDR6,fc00::/7,DIRECT,no-resolve
+  - IP-CIDR6,fe80::/10,DIRECT,no-resolve
+  - MATCH,VPS
+```
+
+其余关键参数是 `flow: xtls-rprx-vision`、`tls: true`、`client-fingerprint: chrome`。客户端的 `network: tcp` 对应服务端的 RAW／TCP 传输；没有设置跳过验证。字段依据：[Mihomo VLESS 文档](https://wiki.metacubex.one/config/proxies/vless/)。
+
+在 Clash Verge Rev“订阅／Profiles”页创建**本地配置**，导入这个 YAML 文件并选中，再到代理页选择 `My-VPS`。不同版本可能通过“新建 → 本地”或配置导入入口操作；不要把本地文件路径或单节点链接当成远程订阅 URL。
+
+![Clash Verge Rev 官方文档中的配置入口](assets/03-verge-import.png)
+
+*图 3：配图为项目官方示例。图中的 URL 输入框用于远程订阅；本节使用本地 YAML，应走“新建／本地导入”入口。*
+
+先开启系统代理，确认一个普通 HTTPS 网站可用，再测试出口。如果要覆盖不遵守系统代理的程序，按客户端提示安装服务模式后启用 TUN，并在其设置中核对 DNS 劫持、自动路由及 IPv6 接管。模板自带 DNS 时，检查应用的 DNS 覆写是否改变了它。
+
+![Clash Verge Rev 官方文档中的系统代理和 TUN 开关](assets/05-verge-enable.png)
+
+*图 4：这里只借用官方界面图辨认开关，不代表这台电脑已经部署过该节点。*
+
+模板让公网目标默认走 `VPS` 组，并保留基础局域网与节点 IP 直连例外，所以国内网站也可能经过服务器。**先这样跑通，再按第五节的 AgentRoute 部分加入日常分流。** 服务端、客户端密钥和域名还没匹配时，不要同时引入复杂分流规则。
+
+关闭连接时，先在客户端关掉自己开启的系统代理／TUN，再退出。异常退出造成代理残留时，到 Windows“设置 → 网络和 Internet → 代理”检查本地代理地址。
+
+### 4.2 iPhone 接入自建节点
+
+如果手机还没有兼容客户端，先用电脑完成网络验收，再按第七节准备自己的 Apple 账户并下载客户端，随后回到本节。若所选客户端下载需要付费，这笔费用与 Claude 会员分开；以 App Store 实际可售情况和金额为准。
+
+使用当前版本明确支持 VLESS + REALITY + Vision 的客户端。以 Shadowrocket 常见字段为例，新增 VLESS 节点时逐项对应；界面名称可能随版本变化：
+
+| 手机字段 | 填写内容 |
+| --- | --- |
+| 类型 | VLESS |
+| 地址／服务器 | 自己的 VPS IPv4 |
+| 端口 | 443 |
+| UUID | 第 3.3 步的 UUID |
+| 传输 | TCP |
+| 流控／Flow | `xtls-rprx-vision` |
+| 传输安全 | REALITY，按 App 页面填写 TLS／REALITY 相关项 |
+| SNI／Server Name | 第 3.4 步确认的目标域名 |
+| Public Key | `Password (PublicKey)` 的值 |
+| Short ID | 第 3.3 步的 Short ID |
+| 指纹 | Chrome，若客户端提供此项 |
+
+保存，选中该节点，开启连接，自行允许系统添加 VPN 配置，再用 Safari 验证。该 App 使用系统 VPN 权限接管流量，不表示服务端协议变成了 WireGuard 或 OpenVPN。
+
+也可以在自己的设备上把参数拼成 VLESS 分享链接导入，但该链接包含节点访问参数，不要上传公开仓库、发给代充商或生成公开二维码。本文不提供任何可连接的公共账号。
+
+### 4.3 已有服务方订阅，可以从这里开始
+
+如果使用的是服务方提供的兼容订阅，在 Clash Verge Rev“订阅／Profiles”粘贴订阅链接后导入并选中，再进入“代理／Proxies”选一个可用节点。订阅链接通常含访问凭据，不要放进公开仓库。
+
+![Clash Verge Rev 的节点和模式选择界面](assets/04-verge-proxy.png)
+
+*图 5：选择配置中的代理组及节点，再确认模式。图里的节点只作界面说明。*
+
+已有订阅按其规则选择“规则模式”；系统代理开关决定哪些程序将请求交给客户端，TUN 则需要另行验证路由、DNS 和 IPv6。注册过程中先保持一个可重复验证的出口，不要一直自动切换节点。
+
+iPhone 使用服务方明确支持的客户端和配置格式，导入后选中节点并开启连接；不能把 Mihomo YAML 直接当成 Shadowrocket 配置使用。服务方配置与自建配置二选一先跑通，避免同时开启多个 VPN／TUN。
+
+### 4.4 完成第一次连接验收
+
+在实际需要使用的设备上逐项检查：
+
+1. **服务端运行**：`systemctl status xray` 显示运行，日志没有持续配置错误。
+2. **端口可达**：Windows 的 TCP 443 测试成功。
+3. **代理请求成功**：通过本地客户端发出的请求能得到回复，出口符合预期。
+4. **浏览器和 App 各自通过**：不能把显式代理的一条 curl 成功当作 TUN 已覆盖所有程序。
+5. **DNS、IPv6、WebRTC 通过**：按[第五节](#check)核对，手机单独检查。
+
+Windows 的显式代理测试示例：
+
+```powershell
+curl.exe --max-time 15 --proxy http://127.0.0.1:7897 https://api.ipify.org
+```
+
+`7897` 要替换为客户端设置页的实际混合端口。期望得到该 VPS 的公网出口；若服务商使用额外 NAT，则与服务商确认实际出站地址。不要把结果截图连同 UUID、公钥、日志一起公开。
+
+**只有以上检查完成，才能说自己的设备已经连通。** 仅仅安装完成、延迟测试有数字或进程显示运行，都不算完整验收。
 
 <a id="check"></a>
 
@@ -279,7 +564,7 @@ Proton 的[邮件追踪防护](https://proton.me/support/email-tracker-protectio
 
 ## 七、美区 Apple 账户怎么准备
 
-**只有网页订阅时，不需要 Apple 账户。** 选择 iPhone 内购路线时，才需要下载 App、管理 App Store 付款与订阅的账户。
+本教程使用 iPhone 内购路线，需要一个由你自己控制、用于下载 App 和管理 App Store 订阅的 Apple 账户。
 
 “Apple ID”现在叫“Apple 账户”。美区指账户的国家或地区设置，并不代表购买一个美国身份。以下路径适用于具备对应地区资料与使用条件的人；姓名、生日、手机号和账单资料按真实情况填写。
 
@@ -301,7 +586,7 @@ Proton 的[邮件追踪防护](https://proton.me/support/email-tracker-protectio
 
 ### “付款方式选无”不是固定步骤
 
-Apple 的部分创建流程提供“无”，它是否出现取决于地区、入口和账户状态。**看不到“无”时，不要随意填写他人信用卡或生成一个账单地址。** 已有余额、未结束订阅、家庭共享和待处理订单，也可能影响改区。
+Apple 的部分创建流程提供“无”，它是否出现取决于地区、入口和账户状态。**看不到“无”时，不要编造付款资料或生成一个账单地址。** 已有余额、未结束订阅、家庭共享和待处理订单，也可能影响改区。
 
 已有账户更改地区的常见路径是“设置 → 姓名 → 媒体与购买项目 → 国家／地区”，以当前系统界面为准。改之前先读[官方准备事项](https://support.apple.com/zh-cn/118283)，尤其是余额、订阅和 iCloud 数据处理。
 
@@ -339,37 +624,25 @@ Apple 的部分创建流程提供“无”，它是否出现取决于地区、�
 | 只有某个邮箱能注册 | 按官方当前登录入口操作，邮箱重点是长期控制与收信正常 |
 | 改时区、语言、删设备记录就能防封 | 不当成保证；不让小白为此删除会话、凭据或改系统设置 |
 | 先用几天 Pro 再升级，保证不封 | 先试用有利于控制花费，等待天数不能保证风控结果 |
-| 某张卡此前必过 | 付款接受情况会变，不能照抄旧帖。夙愿原文已有 10 月 19 日撤回部分卡推荐的更新 |
 
 <a id="subscribe"></a>
 
-## 九、购买 Claude 会员，两条路线选一条
+## 九、用 App Store 礼品卡订阅 Claude
 
-### 先看清套餐、周期和币种
+### 9.1 先在 App 内确认方案和最终金额
 
-截至核对日，[官网定价](https://claude.com/pricing)显示：Pro 月付 20 美元；年付一次收 200 美元，页面以约 17 美元／月展示。当前高档个人套餐显示 Max 100 美元／月、Ultra 200 美元／月。价格未含适用税费，地区、渠道与最终结账金额可能不同。
+先在官方 Claude App 里查看可选套餐、币种、月付／年付及续费金额。第一次使用可先选按月方案，确认满足自己的需要后再决定是否续费。**礼品卡需要覆盖 App Store 最终确认金额与适用税费，不能只按旧帖子中的整数面额充值。**
 
-![Claude 官网当前个人套餐价格](assets/12-claude-pricing.jpg)
+![Claude 官网当前个人套餐概览](assets/12-claude-pricing.jpg)
 
-*图 10：2026-10-31 官网截图。Pro 卡片上的 17 美元是年付折算价，不能理解成月付只扣 17 美元；旧帖中的 Max 20x 名称也不宜直接套用当前页面。*
+*图 10：2026-10-31 的官网方案截图，用于辨认套餐和计费周期。iPhone 内购的可选方案、币种和扣款金额，以 Claude App 与 Apple 付款确认框为准。*
 
-我的建议是先按月确认自己的使用量。付费会员仍有用量规则；Pro 也不是可以随意调用 API 的充值余额。
+付费会员仍有用量规则；Pro 也不是可以随意调用 API 的充值余额。
 
-### 路线 A：在 Claude 网页付款
+### 9.2 购买礼品卡、兑换余额并在 App 内订阅
 
-适合已经有受支持付款方式的人，无需 Apple 账户。
 
-1. 登录自己的免费 Claude 账号，打开头像／姓名菜单。
-2. 进入 `Settings → Billing → Upgrade plan`，选择 Pro。
-3. 明确选择 Monthly 或 Annual，核对本次实际扣款总额。
-4. 填写自己付款方式的真实账单信息，完成银行需要的 3DS 验证后，自行确认订阅。
-5. 保存收据，回 Billing 确认套餐、周期和下次账单日期。
-
-入口依据：[官方 Pro 订阅步骤](https://support.claude.com/en/articles/8325609-how-do-i-sign-up-for-the-pro-plan)。网页银行卡支付要检查发卡与账单地区是否受支持，地址需与银行记录一致；官方说明网页不接受 PayPal、Venmo，详见[拒付排查](https://support.claude.com/en/articles/9402418-why-was-my-card-declined)。这不等于 Apple 商店所有地区的支付规则也相同。
-
-### 路线 B：iPhone 内购与 Apple 账户余额
-
-适合已有合适 Apple 账户、能在对应商店购买的人。网页付款与 iOS 内购二选一，不要为了排错在两个渠道各买一次。
+在第七节准备好的 Apple 账户下下载官方 Claude，并使用第八节注册的同一个 Claude 账号。购买前再次核对这两个账号，避免把权益买到别的账户。
 
 这条操作顺序主要汇总自 X：蔚蓝的[礼品卡与内购长文](https://x.com/zureA255062/status/2103672988524855361)强调自己掌握账号、礼卡兑换后在 App 内购买、按需取消续费；夙愿的[订阅章节](https://x.com/suyuan1711/status/2102744129235193975)提供了支付宝礼卡入口与购买失败后的处理经历；蔚蓝的[10 月 24 日新帖](https://x.com/zureA255062/status/2114016362561466717)补充了 Apple 账户创建和首次商店检查。下面保留可核对的步骤，不采用“必过、必退、永久稳定”的措辞。
 
@@ -377,11 +650,10 @@ Apple 的部分创建流程提供“无”，它是否出现取决于地区、�
 
 **第二步，再决定是否买礼品卡。** Apple 账户余额可用于部分 App 内订阅，但有些购买仍要求登记有效付款方式；余额不是万能的拒付解决办法，见 [Apple 余额用途](https://support.apple.com/en-la/118245)。
 
-购买礼品卡可按以下顺序考虑：
+购买礼品卡时，先按原帖核对渠道、地区和总价：
 
 | 渠道 | 如何操作 | 下单前看什么 |
 | --- | --- | --- |
-| [Apple 美国官网](https://www.apple.com/shop/gift-cards) | Buy → 选择电子邮件交付及金额 → 填自己的收件邮箱 → 按结账页付款 | 商店地区、交付方式、收件邮箱、是否接受你的卡及真实账单资料 |
 | 有正规订单和售后的零售渠道 | 搜索美国地区 Apple Gift Card，确认商品后购买 | 标注 US、用途、手续费、发货时间、退款条件和收据 |
 | 社区提到的支付宝礼卡入口 | 夙愿与蔚蓝帖子描述过境外城市／礼卡入口，夙愿提到 Pockyt Shop | 这里只保留为社区线索；本次未验证入口、库存和售后，不能保证现仍可买 |
 
@@ -397,9 +669,7 @@ Apple 的部分创建流程提供“无”，它是否出现取决于地区、�
 
 **第五步，确认权益到账。** 在 Claude 设置确认已显示付费套餐，在 Apple 订阅中确认商品与续费日期，并保存收据。被扣款但没升级，先排查是否登录了另一个 Claude 账号，再通过 App 提供的恢复购买入口或官方支持处理，别再次付款。
 
-### 不想自动续费，购买后就处理
-
-网页购买：回 `Settings → Billing → Cancel`。
+### 9.3 确认权益并管理自动续费
 
 iOS 内购：在 Claude 的 Billing 里进入 `Manage subscription`，或通过 Apple 的订阅管理找到 Claude 后取消；如果看不到，按收据确认是哪个 Apple 账户购买的。
 
@@ -415,19 +685,19 @@ Claude 官方说明取消后通常仍可使用至本账期结束，并要求至�
 
 ## 十、遇到问题，先定位到具体一步
 
+### 账号、付款与基础网络
+
 | 现象 | 先做什么 | 别急着做什么 |
 | --- | --- | --- |
 | 节点一直超时 | 检查订阅有效期、配置是否激活、节点可达性和日志 | 重装电脑、购买第二台 VPS |
 | 只有浏览器能用 | 检查程序是否遵守系统代理；需要时验证 TUN | 认为整机已经代理 |
 | SSH 失败 | 核对实例 IP、端口、用户、密钥、实例状态和服务商控制台 | 忽略主机指纹变化 |
-| SSH 窗口没输出 | 检查本地 1080 监听及显式代理请求，`-N` 本来就不进入远程 shell | 仅凭无输出就重装服务器 |
 | 检测站显示不同 IP | 对照各域名的规则、IPv4／IPv6、实际节点 | 用一个检测分数判断封号原因 |
 | Proton 收不到信 | 检查收件地址、垃圾邮件、普通邮件是否能收、最新验证请求 | 连续注册很多邮箱 |
 | Apple 无法创建账户 | 按官方方法检查系统、网络和服务状态，必要时找支持 | 买共享账号或修改虚假出生日期 |
 | Apple 无法完成购买 | 核对账户、余额含税、未结账单、App 内购买限制，再联系支持 | 不断点击购买或重复充值 |
-| Claude 银行卡被拒 | 核对支持的发卡与账单地区、真实地址、额度和 3DS，联系发卡行 | 生成一个“免税州地址”硬填 |
 | Claude 出现地区／身份核验提示 | 核对官方条件，用自己的资料或联系官方支持 | 借用身份、购买过审账号 |
-| 扣款后套餐没变 | 核对 Claude 邮箱、Apple 账户与收据，使用恢复购买／支持渠道 | 两个平台再各买一次 |
+| 扣款后套餐没变 | 核对 Claude 邮箱、Apple 账户与收据，使用恢复购买／支持渠道 | 重复购买同一份订阅 |
 
 联系 Apple 支持时，可以据实描述：
 
@@ -437,13 +707,44 @@ Claude 官方说明取消后通常仍可使用至本账期结束，并要求至�
 
 当你可以解释自己用的是什么线路、哪个程序经过代理、邮箱如何找回、谁在收会员费、从哪里取消续费，这套环境才算真正归自己掌握。
 
+### VPS 节点专项排查
+
+| 现象 | 检查顺序 |
+| --- | --- |
+| 安装器下载失败 | VPS 到 GitHub 的连通性、下载 URL、证书与系统时间；不要加 `-k` 忽略证书 |
+| JSON 检查失败 | 是否仍有 `REPLACE_`，逗号／引号是否完整，私钥和 Short ID 是否填错 |
+| 服务无法启动 | `journalctl -u xray -n 50 --no-pager`，检查权限、GeoIP 文件和 443 占用 |
+| TCP 443 不通 | 实例状态、服务监听、服务商安全组和系统防火墙 |
+| TCP 通但节点不通 | UUID、Flow、公钥、Short ID、SNI 对应关系及目标站点的 TLS 握手 |
+| 电脑通但手机不通 | 手机 App 是否支持同一协议组合、是否真的选中该节点、VPN 权限与网络情况 |
+| 网页通但命令行不通 | 程序是否遵守系统代理；需要时检查 TUN，或为该请求显式指定代理 |
+| DNS／IPv6 检测不符 | 浏览器独立 DoH、应用覆写、TUN DNS 劫持、IPv6 路由与直连例外 |
+
+日志可能包含客户端地址和访问目标，公开求助前只摘取必要报错并脱敏。不要贴整份配置和密钥。
+
+<a id="maintenance"></a>
+
+## 十一、停用、回退和日常维护
+
+如果这是一台只为本节点新建的 VPS，想停用先在本机关闭对应系统代理／TUN，再在 VPS 执行：
+
+```bash
+systemctl disable --now xray
+```
+
+这会停用该 Xray 服务，不会删除配置和备份。如果你后来让同一个 Xray 承载了其他业务，先确认影响范围。
+
+恢复配置时，从 `/root/xray-backups/` 找到所需备份，先对备份运行 `xray run -test -config`，成功后用前面相同的 `install -o root -g xray -m 640` 安装回去，再启动服务。不要用重装系统代替恢复配置。
+
+日常关注三个地方：VPS 流量／到期账单、Xray 官方安全更新、客户端更新。升级前保留可用配置和服务版本；不要设置无人检查的每日强制升级。
+
 <a id="references"></a>
 
 ## 参考链接与资料日期
 
 ### 近期社区经验
 
-1. [夙愿学长：Claude 注册、网络与订阅长文](https://x.com/suyuan1711/status/2102744129235193975)：原帖 2026-09-23，标题标注 10 月更新；原文含 10 月 19 日银行卡推荐变更。用于提炼操作线索，防封与风控因果未获独立验证。
+1. [夙愿学长：Claude 注册、网络与订阅长文](https://x.com/suyuan1711/status/2102744129235193975)：原帖 2026-09-23，标题标注 10 月更新；原文含 10 月的支付方式推荐变更。用于提炼操作线索，防封与风控因果未获独立验证。
 2. [逸尘：IPPure、WebRTC 与规则工具](https://x.com/gengdaJ/status/2116397558545453168)：2026-10-31。该帖中的观察期较短，不足以证明长期稳定性。
 3. [余温：海外基础设施经验](https://x.com/gkxspace/status/2101993381303820704)：原帖 2026-09-21，正文标注更新到 2026-10-25。原帖含推广链接；本教程商家入口不带邀请码。
 4. [蔚蓝 WEILANX：Apple 账户、礼卡与 App 内订阅经验](https://x.com/zureA255062/status/2103672988524855361)：2026 年 9 月帖。用于了解内购操作与常见问题，不将作者成功次数、退款经验当作承诺。
@@ -466,16 +767,29 @@ Claude 官方说明取消后通常仍可使用至本账期结束，并要求至�
 15. [Apple 创建账户](https://support.apple.com/zh-cn/108647)、[无法创建账户](https://support.apple.com/zh-cn/120636)、[更改地区](https://support.apple.com/zh-cn/118283)。本次读到的 Apple 创建／改区资料含 2026 年 9 至 10 月更新。
 16. [Apple 美国礼品卡](https://www.apple.com/shop/gift-cards)、[兑换礼品卡](https://support.apple.com/zh-cn/118242?device-type=iphone)、[账户余额可买什么](https://support.apple.com/en-la/118245)、[取消订阅](https://support.apple.com/zh-cn/118428)。
 17. [Claude 支持地区](https://support.claude.com/en/articles/8461763-where-can-i-access-claude)、[手机号验证](https://support.claude.com/en/articles/8287232-verify-your-phone-number)。手机号文章为 2026 年 8 月更新。
-18. [Claude 当前定价](https://claude.com/pricing)、[网页 Pro 订阅](https://support.claude.com/en/articles/8325609-how-do-i-sign-up-for-the-pro-plan)、[iOS Pro 订阅](https://support.claude.com/en/articles/9266495-how-do-i-sign-up-for-claude-pro-on-the-claude-app-for-ios)、[银行卡被拒](https://support.claude.com/en/articles/9402418-why-was-my-card-declined)、[取消会员](https://support.claude.com/en/articles/8325617-cancel-your-pro-max-or-ultra-subscription)。
+18. [Claude 当前定价](https://claude.com/pricing)、[iOS Pro 订阅](https://support.claude.com/en/articles/9266495-how-do-i-sign-up-for-claude-pro-on-the-claude-app-for-ios)、[取消会员](https://support.claude.com/en/articles/8325617-cancel-your-pro-max-or-ultra-subscription)。
 
-### VPS 节点搭建的新增资料
+### VPS 节点搭建原始资料
 
-19. [XTLS 官方安装器](https://github.com/XTLS/Xray-install/blob/main/README_zh-Hans.md)、[Xray 26.10.29](https://github.com/XTLS/Xray-core/releases/tag/v26.10.29)、[REALITY 参数](https://xtls.github.io/config/transports/reality.html)、[官方服务端示例](https://github.com/XTLS/Xray-examples/tree/main/VLESS-TCP-XTLS-Vision-REALITY)、[Mihomo VLESS 参数](https://wiki.metacubex.one/config/proxies/vless/)。完整说明及验证范围见 [VPS-SETUP.md](VPS-SETUP.md)。
+- [XTLS 官方安装器与当前权限要求](https://github.com/XTLS/Xray-install/blob/main/README_zh-Hans.md)。2026-10-18 起调整运行用户和权限；本文按新安装流程编写。
+- [Xray-core 26.10.29 发布](https://github.com/XTLS/Xray-core/releases/tag/v26.10.29)。本文核对时的稳定版本。
+- [XTLS 官方 VLESS REALITY 示例](https://github.com/XTLS/Xray-examples/tree/main/VLESS-TCP-XTLS-Vision-REALITY)。本文另采用当前文档的 `target` 字段；它与旧 `dest` 互为别名。
+- [REALITY 字段、目标选择及回落行为](https://xtls.github.io/config/transports/reality.html)。
+- [官方 X25519 生成器](https://github.com/XTLS/Xray-core/blob/v26.10.29/main/commands/all/curve25519.go)。
+- [Mihomo VLESS、REALITY 与 XUDP 字段](https://wiki.metacubex.one/config/proxies/vless/)。
+- [Clash Verge Rev 官方入门](https://www.clashverge.dev/guide/quickstart.html)。两张配图源于该页，来源细节见 [assets/README.md](assets/README.md)。
+- [Project X 面向新手的基础教程](https://xtls.github.io/document/level-0/)。用于补充 Linux、SSH 等基础概念；其中不同章节可能采用其他传输方案，配置不要混用。
+
+### 补充基础资料
+
+- [Firefox 官方下载](https://www.firefox.com/)
 
 资料日期说明：近期社区经历优先选近三个月；SSH、浏览器、DNS 等基础说明优先引用仍在维护的原始文档，不为了“新”而引用转载文章。旧版套餐对比资料与当前官网冲突时，价格和套餐以当前官网及实际结账页为准。检索中出现一份标注 2026-11-12 生效的地区政策，晚于本稿日期，未将它当作当日已生效规则使用。
 
 ## 图片来源与验证范围
 
-全部配图均为真实网页截图或官方公开帮助配图，没有生成仿真的付款成功图。图 1、2、6、10 为 2026-10-31 公开页面截图；图 3—5 来自 Clash Verge Rev 官方图解；图 7—8 来自 Proton 官方图解；图 9、11 来自 Apple 官方帮助。逐图来源及图片文件链接见 [assets/README.md](assets/README.md)。
+保留 **11 张网页截图与官方配图**，开头另增加一张原创流程示意图。产品截图的逐图来源见 [assets/README.md](assets/README.md)，流程图不代表产品实际界面或实测结果。
 
-本文未执行账号登录、注册提交、购买或订阅，也未实际购买 VPS 或完成手机端操作。SSH 与新增 Xray 方案均未在新购远端实例上做端到端测试；新增模板的本地配置检查范围见搭建教程。页面入口和金额随版本、地区、账户状态变化，需在自己的界面确认。公开仓库不包含私人 IP、真实节点、密钥、验证码或付款资料。
+Xray 服务端与 Clash 客户端模板已使用临时测试参数，在 Windows 上分别通过 Xray 26.10.29 的 `run -test` 和 Mihomo 1.19.33 的 `-t`，退出码均为 0；另已核对端口、Flow、SNI、节点 IP 直连例外和默认代理组。正文代码与下载模板保持一致。
+
+未执行账号登录、注册提交、购买、订阅或真实 VPS 部署；未在 Ubuntu／Debian 实机运行安装器，也未测试服务商防火墙、实际跨境线路、REALITY 目标适配和实体 iPhone。配置检查与文档排版检查不等于端到端部署成功。页面、金额和规则可能变化，需在自己的环境确认。公开仓库不含真实节点认证参数、私人 IP、密钥、验证码或付款资料。

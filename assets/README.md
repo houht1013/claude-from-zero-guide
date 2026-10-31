@@ -4,6 +4,7 @@
 
 | 文件 | 来源页面 | 类型与说明 |
 | --- | --- | --- |
+| [00-setup-flow.svg](00-setup-flow.svg) | 本教程原创流程示意 | SVG 矢量图，展示自建节点至 App Store 礼品卡内购的顺序；非产品截图 |
 | [01-dmit-pricing.jpg](01-dmit-pricing.jpg) | [DMIT 定价页](https://www.dmit.io/pages/pricing) | 2026-10-31 公开页截图 |
 | [02-bwg-order.jpg](02-bwg-order.jpg) | [页面截图来源 bwh81.net](https://bwh81.net/order/ecommerce/Los%20Angeles/USCA_9)，[主域名同类入口](https://bandwagonhost.com/vps-hosting.php) | 2026-10-31 公开选购页截图，不含后台账户资料 |
 | [03-verge-import.png](03-verge-import.png) | [官方快速入门](https://www.clashverge.dev/guide/quickstart.html)，[原图](https://www.clashverge.dev/assets/guide/quickstart/verge_import.png) | 官方订阅导入示例 |

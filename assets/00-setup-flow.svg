@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1240" viewBox="0 0 1120 1240" role="img" aria-labelledby="flow-title flow-desc">
+<title id="flow-title">从买 VPS 到用礼品卡订阅 Claude 的完整流程</title>
+<desc id="flow-desc">十二步依次完成资料准备、购买 VPS、部署 Xray、接入设备、网络验收、Proton 邮箱、Apple 账户、Claude 注册、礼品卡兑换、App 内购和续费维护。已有节点可跳过服务器购买与部署。</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#597769"/></marker></defs>
+<rect width="1120" height="1240" rx="20" fill="#f5f5ee"/>
+<g font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif"><text x="50" y="50" font-size="30" font-weight="700" fill="#254e42">先接好网络，再准备账号，最后兑换礼卡订阅</text><text x="50" y="83" font-size="18" fill="#627268">跟着箭头走；已有可用节点，可从第 05 步开始。</text>
+<path d="M 520 182 L 600 182" fill="none" stroke="#597769" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M 835 252 L 835 296" fill="none" stroke="#597769" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M 600 366 L 520 366" fill="none" stroke="#597769" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M 285 436 L 285 480" fill="none" stroke="#597769" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M 520 550 L 600 550" fill="none" stroke="#597769" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M 835 620 L 835 664" fill="none" stroke="#597769" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M 600 734 L 520 734" fill="none" stroke="#597769" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M 285 804 L 285 848" fill="none" stroke="#597769" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M 520 918 L 600 918" fill="none" stroke="#597769" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M 835 988 L 835 1032" fill="none" stroke="#597769" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M 600 1102 L 520 1102" fill="none" stroke="#597769" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="50" y="112" width="470" height="140" rx="12" fill="#ffffff" stroke="#bed0c1" stroke-width="2"/>
+<text x="70" y="148" font-size="18" font-weight="700" fill="#6b816e">01</text>
+<text x="115" y="149" font-size="25" font-weight="700" fill="#254e42">准备资料与使用条件</text>
+<text x="73" y="190" font-size="19" fill="#465344">电脑、iPhone、邮箱、手机号</text>
+<text x="73" y="219" font-size="19" fill="#465344">先确认地区条件和预算</text>
+<rect x="600" y="112" width="470" height="140" rx="12" fill="#ffffff" stroke="#bed0c1" stroke-width="2"/>
+<text x="620" y="148" font-size="18" font-weight="700" fill="#6b816e">02</text>
+<text x="665" y="149" font-size="25" font-weight="700" fill="#254e42">购买一台 VPS</text>
+<text x="623" y="190" font-size="19" fill="#465344">DMIT 或搬瓦工，二选一</text>
+<text x="623" y="219" font-size="19" fill="#465344">记下 IP、SSH 端口和认证方式</text>
+<rect x="600" y="296" width="470" height="140" rx="12" fill="#ffffff" stroke="#bed0c1" stroke-width="2"/>
+<text x="620" y="332" font-size="18" font-weight="700" fill="#6b816e">03</text>
+<text x="665" y="333" font-size="25" font-weight="700" fill="#254e42">SSH 登录并安装 Xray</text>
+<text x="623" y="374" font-size="19" fill="#465344">确认系统与 443 端口</text>
+<text x="623" y="403" font-size="19" fill="#465344">按官方安装器部署核心</text>
+<rect x="50" y="296" width="470" height="140" rx="12" fill="#ffffff" stroke="#bed0c1" stroke-width="2"/>
+<text x="70" y="332" font-size="18" font-weight="700" fill="#6b816e">04</text>
+<text x="115" y="333" font-size="25" font-weight="700" fill="#254e42">配置并启动自己的节点</text>
+<text x="73" y="374" font-size="19" fill="#465344">生成 UUID、密钥、Short ID</text>
+<text x="73" y="403" font-size="19" fill="#465344">校验配置，放行 TCP 443</text>
+<rect x="50" y="480" width="470" height="140" rx="12" fill="#ffffff" stroke="#bed0c1" stroke-width="2"/>
+<text x="70" y="516" font-size="18" font-weight="700" fill="#6b816e">05</text>
+<text x="115" y="517" font-size="25" font-weight="700" fill="#254e42">接入电脑和 iPhone</text>
+<text x="73" y="558" font-size="19" fill="#465344">导入节点参数，选中节点</text>
+<text x="73" y="587" font-size="19" fill="#465344">按需开启系统代理或 TUN</text>
+<rect x="600" y="480" width="470" height="140" rx="12" fill="#ffffff" stroke="#bed0c1" stroke-width="2"/>
+<text x="620" y="516" font-size="18" font-weight="700" fill="#6b816e">06</text>
+<text x="665" y="517" font-size="25" font-weight="700" fill="#254e42">检查网络，再继续注册</text>
+<text x="623" y="558" font-size="19" fill="#465344">核对出口、DNS、IPv6、WebRTC</text>
+<text x="623" y="587" font-size="19" fill="#465344">电脑与手机分别验收</text>
+<rect x="600" y="664" width="470" height="140" rx="12" fill="#fffaf0" stroke="#dfcda8" stroke-width="2"/>
+<text x="620" y="700" font-size="18" font-weight="700" fill="#6b816e">07</text>
+<text x="665" y="701" font-size="25" font-weight="700" fill="#254e42">创建 Proton 邮箱</text>
+<text x="623" y="742" font-size="19" fill="#465344">完成收信测试</text>
+<text x="623" y="771" font-size="19" fill="#465344">保存恢复短语和恢复方式</text>
+<rect x="50" y="664" width="470" height="140" rx="12" fill="#fffaf0" stroke="#dfcda8" stroke-width="2"/>
+<text x="70" y="700" font-size="18" font-weight="700" fill="#6b816e">08</text>
+<text x="115" y="701" font-size="25" font-weight="700" fill="#254e42">准备美区 Apple 账户</text>
+<text x="73" y="742" font-size="19" fill="#465344">自己注册，完成首次商店检查</text>
+<text x="73" y="771" font-size="19" fill="#465344">只使用自己控制的账户</text>
+<rect x="50" y="848" width="470" height="140" rx="12" fill="#fffaf0" stroke="#dfcda8" stroke-width="2"/>
+<text x="70" y="884" font-size="18" font-weight="700" fill="#6b816e">09</text>
+<text x="115" y="885" font-size="25" font-weight="700" fill="#254e42">注册 Claude 并免费测试</text>
+<text x="73" y="926" font-size="19" fill="#465344">邮箱验证、所需手机号验证</text>
+<text x="73" y="955" font-size="19" fill="#465344">确认能完成一轮正常对话</text>
+<rect x="600" y="848" width="470" height="140" rx="12" fill="#fffaf0" stroke="#dfcda8" stroke-width="2"/>
+<text x="620" y="884" font-size="18" font-weight="700" fill="#6b816e">10</text>
+<text x="665" y="885" font-size="25" font-weight="700" fill="#254e42">购买并兑换美区礼品卡</text>
+<text x="623" y="926" font-size="19" fill="#465344">核对 US 地区、费用与订单</text>
+<text x="623" y="955" font-size="19" fill="#465344">兑换到正确 Apple 账户</text>
+<rect x="600" y="1032" width="470" height="140" rx="12" fill="#fffaf0" stroke="#dfcda8" stroke-width="2"/>
+<text x="620" y="1068" font-size="18" font-weight="700" fill="#6b816e">11</text>
+<text x="665" y="1069" font-size="25" font-weight="700" fill="#254e42">在 Claude App 内订阅</text>
+<text x="623" y="1110" font-size="19" fill="#465344">选择所需套餐和计费周期</text>
+<text x="623" y="1139" font-size="19" fill="#465344">核对最终金额后自行确认</text>
+<rect x="50" y="1032" width="470" height="140" rx="12" fill="#fffaf0" stroke="#dfcda8" stroke-width="2"/>
+<text x="70" y="1068" font-size="18" font-weight="700" fill="#6b816e">12</text>
+<text x="115" y="1069" font-size="25" font-weight="700" fill="#254e42">确认权益与后续维护</text>
+<text x="73" y="1110" font-size="19" fill="#465344">检查套餐、收据和续费日期</text>
+<text x="73" y="1139" font-size="19" fill="#465344">按需取消续费，保留回退方法</text>
+<text x="50" y="1212" font-size="17" fill="#687365">流程示意不代表已实测；配置、地区条件、价格和实际连通性按正文逐项确认。</text>
+</g></svg>
